@@ -1,0 +1,18 @@
+{
+  "name": "market-user",
+  "version": "0.0.1",
+  "description": "User module of stock exchange system.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "imguozr",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.11.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "koa-session": "^5.12.3"
+  }
+}
