@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
   "author": "imguozr",
   "license": "MIT",
@@ -13,6 +13,13 @@
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
-    "koa-session": "^5.12.3"
+    "koa-session": "^5.12.3",
+    "mongoose": "^5.7.11",
+    "node-uuid": "^1.4.8",
+    "nodemon": "^1.19.4",
+    "sequelize": "^5.21.2"
+  },
+  "devDependencies": {
+    "eslint": "^6.6.0"
   }
 }

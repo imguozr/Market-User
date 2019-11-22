@@ -12,12 +12,13 @@ var fn_login = async (ctx, next) => {
         username = ctx.request.body.name || '',
         password = ctx.request.body.password || '';
     console.log(`Sign in with name: ${username}, password: ${password}`);
+    // TODO: Connect databse.
     if (username === 'koa' && password === 'admin') {
         ctx.session.user = username;
-        ctx.body = { success: true, msg: '登录成功！' };
+        ctx.body = { success: true, msg: 'Success! ' };
         ctx.response.redirect('/home')
     } else {
-        ctx.body = { success: false, msg: '账号或密码错误！' };
+        ctx.body = { success: false, msg: 'Wrong username or password.' };
         ctx.response.redirect('/')
     }
 };
