@@ -1,7 +1,7 @@
 const Koa = require('koa');
 const router = require('koa-router')();
 const bodyParser = require('koa-bodyparser');
-const controller = require('./controller')
+const controller = require('./server/controllers')
 const session = require('koa-session');
 
 const app = new Koa();

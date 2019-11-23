@@ -10,13 +10,16 @@
   "author": "imguozr",
   "license": "MIT",
   "dependencies": {
+    "fs": "0.0.1-security",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "koa-session": "^5.12.3",
     "mongoose": "^5.7.11",
+    "mysql": "^2.17.1",
     "node-uuid": "^1.4.8",
     "nodemon": "^1.19.4",
+    "path": "^0.12.7",
     "sequelize": "^5.21.2"
   },
   "devDependencies": {
