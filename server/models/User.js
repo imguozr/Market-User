@@ -7,7 +7,7 @@ module.exports = db.defineModel('user', {
     },
     password: db.STRING(20),
     username: db.STRING(20),
-    address: doNotTrack.STRING(255),
+    address: db.STRING(255),
     token: {
         type: db.STRING(255),
         allowNull: true

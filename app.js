@@ -4,25 +4,16 @@ const bodyParser = require('koa-bodyparser');
 const controller = require('./server/controllers')
 const session = require('koa-session');
 
+const index = require('./server/routers/index')
+const user = require('./server/routers/user')
+
 const app = new Koa();
-app.keys = ['FK GFW'];
-
-app.use(async (ctx, next) => {
-    console.log(`Processing ${ctx.request.method} ${ctx.request.url}`);
-    await next();
-});
-
-app.use(session({
-    app: 'koa:sess',
-    maxAge: 54000,
-    overwrite: true,
-    httpOnly: true,
-    signed: true
-}, app));
+// app.keys = ['FK GFW'];
 
 app.use(bodyParser());
 
-app.use(controller());
+router.use('/', index.routes(), index.allowedMethods())
+router.use('/api', user.routes(), user.allowedMethods())
 
 app.listen(3000);
 console.log('App started at http://localhost:3000');

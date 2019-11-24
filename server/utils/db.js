@@ -111,6 +111,6 @@ for (let type of TYPES) {
 }
 
 exp.ID = ID_TYPE;
-exp.generateId = generateId;
+exp.generateId = this.generateId;
 
 module.exports = exp;
