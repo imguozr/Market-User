@@ -5,7 +5,7 @@ const config = {
     database: {
         DIALECT: 'mysql',
         DATABASE: 'market-user',
-        USERNAME: 'root',
+        USERNAME: 'silvermont',
         PASSWORD: 'silvermont',
         PORT: '3306',
         HOST: 'localhost'
