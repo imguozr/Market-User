@@ -76,8 +76,7 @@ const Login = async (ctx) => {
 const LogOut = async (ctx) => {
     let result = {
         success: false,
-        message: '',
-        data: null
+        message: ''
     }
     let post = ctx.request.body;
     await User.findOne({
@@ -90,6 +89,65 @@ const LogOut = async (ctx) => {
         } else {
             user.token = null;
             await user.save();
+            result.success = true;
+            result.message = 'Log out successfully.'
+        }
+    }).catch(err => {
+        ctx.body = err;
+    });
+    ctx.body = result;
+};
+
+const ForgotPassword = async (ctx) => {
+    let result = {
+        success: false,
+        message: ''
+    };
+    let post = ctx.request.body;
+    await User.findOne({
+        name: post.name
+    }).then(async (user) => {
+        if (!user) {
+            result.message = 'No such user.'
+            ctx.body = result;
+            return false;
+        } else {
+            user.password = post.password;
+            user.token = null;
+            await user.save();
+            result.success = true;
+            result.message = 'Reset password successfully.'
+        }
+    }).catch(err => {
+        ctx.body = err;
+    });
+    ctx.body = result;
+};
+
+const UpdateProfile = async (ctx) => {
+    let result = {
+        success: false,
+        message: '',
+        data: null
+    };
+    let post = ctx.request.body;
+    await User.findOne({
+        name: post.name
+    }).then(async (user) => {
+        if (!user) {
+            result.message = 'No such user.'
+            ctx.body = result;
+            return false;
+        } else {
+            for (const [key, value] of post.entries()) {
+                if (! key === 'name') {
+                    user[key] = value;
+                }
+            }
+            await user.save();
+            result.success = true;
+            result.message = 'Update profile successfully.'
+            result.data = post;
         }
     }).catch(err => {
         ctx.body = err;
@@ -157,7 +215,8 @@ module.exports = (router) => {
     router.post('/register', Register),
         router.post('/login', Login),
         router.post('/logout', LogOut),
-        router.get('/getToken', checkToken, GetToken),
+        router.post('/forgot', ForgotPassword)
+    router.get('/getToken', checkToken, GetToken),
         router.get('/auth/github', GetGithub),
         router.get('/auth/github/callback', GetGithubAccessToken),
         router.get('/auth/github/user', GetGithubUser)
