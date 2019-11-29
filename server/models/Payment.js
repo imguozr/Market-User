@@ -6,6 +6,7 @@ module.exports = db.defineModel('user_payment', {
         references: 'user',
         referencesKey: 'id'
     },
-    payment_type: db.STRING(10),
-    payment_nickname: db.STRING(256)
+    payment_nickname: db.STRING(50),
+    account_number: db.STRING(10),
+    routing_number: db.STRING(10)
 });
