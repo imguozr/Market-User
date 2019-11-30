@@ -12,6 +12,6 @@ var Payment = db.defineModel('user_payment', {
     routing_number: db.STRING(10)
 });
 
-Payment.belongsTo(User);
+Payment.belongsTo(User, { foreignKey: 'username', targetKey: 'username' });
 
 module.exports = Payment;

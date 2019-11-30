@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const OAuthConfig = require('../../config/auth.config');request-promise
+const OAuthConfig = require('../../config/auth.config');
 
 const GetGithub = async (ctx) => {
     let dataStr = (new Date()).valueOf();

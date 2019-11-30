@@ -1,9 +1,9 @@
 const
     request = require('supertest'),
-    chai = require('chai'),
+    expect = require('chai').expect,
     app = require('../app'),
-    expect = chai.expect,
-    User = require('../server/models/User');
+    User = require('../server/models/User'),
+    Payment = require('../server/models/Payment');
 
 describe('Testing user APIs', () => {
     let server = app.listen(9900);
@@ -227,14 +227,14 @@ describe('Testing user APIs', () => {
             });
     });
 
-    it('Test POST /user/update 0', (done) => {
+    it('Test POST /user/profile/update 0', (done) => {
         let data = {
             username: 'abc',
             email: '123@098.net',
             address: '830 N abc Rd'
         };
         request(server)
-            .post('/user/update')
+            .post('/user/profile/update')
             .send(data)
             .expect(400)
             .end((err, res) => {
@@ -260,14 +260,14 @@ describe('Testing user APIs', () => {
             });
     });
 
-    it('Test POST /user/update 1', (done) => {
+    it('Test POST /user/profile/update 1', (done) => {
         let data = {
             username: 'abc',
             email: '123@098.net',
             address: '830 N abc Rd'
         };
         request(server)
-            .post('/user/update')
+            .post('/user/profile/update')
             .send(data)
             .expect(200)
             .end((err, res) => {
@@ -284,6 +284,223 @@ describe('Testing user APIs', () => {
             }).then(user => {
                 expect(user.email).to.be.deep.equal(data.email);
                 expect(user.address).to.be.deep.equal(data.address);
+            });
+        };
+    });
+
+    it('Test GET /user/profile 0', (done) => {
+        let data = {
+            username: 'abc'
+        };
+        request(server)
+            .get('/user/profile')
+            .send(data)
+            .expect(200)
+            .end((err, res) => {
+                expect(res.body.success).to.be.true;
+                expect(res.body.message).to.be.deep.equal('Fetch profile successfully.');
+                done();
+            });
+        async () => {
+            await User.findOne({
+                where: {
+                    username: post.username
+                }
+            }).then(user => {
+                expect(res.body.data).to.be.deep.equal({
+                    username: user.username,
+                    email: user.email,
+                    address: user.address
+                })
+            });
+        };
+    });
+
+    it('Test GET /user/profile 1', (done) => {
+        let data = {
+            username: 'abcd'
+        };
+        request(server)
+            .get('/user/profile')
+            .send(data)
+            .expect(400)
+            .end((err, res) => {
+                expect(res.body.success).to.be.false;
+                expect(res.body.message).to.be.deep.equal('No such user.');
+                done();
+            });
+    });
+
+    it('POST /user/logout', (done) => {
+        let data = {
+            username: 'abc'
+        };
+        request(server)
+            .post('/user/logout')
+            .send(data)
+            .expect(200)
+            .end((err, res) => {
+                expect(res.body.success).to.be.true;
+                expect(res.body.message).to.deep.equal('Logged out successfully.');
+                done();
+            });
+    });
+
+    it('Test GET /user/profile 2', (done) => {
+        let data = {
+            username: 'abc'
+        };
+        request(server)
+            .get('/user/profile')
+            .send(data)
+            .expect(400)
+            .end((err, res) => {
+                expect(res.body.success).to.be.false;
+                expect(res.body.message).to.be.deep.equal('Please login.');
+                done();
+            });
+    });
+
+    it('Test POST /payment 0', (done) => {
+        let data = {
+            username: 'abc'
+        };
+        request(server)
+            .get('/user/payment')
+            .send(data)
+            .expect(400)
+            .end((err, res) => {
+                expect(res.body.success).to.be.false;
+                expect(res.body.message).to.be.deep.equal('Please login.');
+                done();
+            });
+    });
+
+    it('POST /user/login', (done) => {
+        let data = {
+            username: 'abc',
+            password: '1qadfwrg43'
+        };
+        request(server)
+            .post('/user/login')
+            .send(data)
+            .expect(200)
+            .end((err, res) => {
+                expect(res.body.success).to.be.true;
+                expect(res.body.data.username).to.deep.equal('abc');
+                done();
+            });
+    });
+
+    it('Test POST /user/payment 1', (done) => {
+        let data = {
+            username: 'abc'
+        };
+        request(server)
+            .get('/user/payment')
+            .send(data)
+            .expect(400)
+            .end((err, res) => {
+                expect(res.body.success).to.be.false;
+                expect(res.body.message).to.be.deep.equal('No payments yet, please add one.');
+                done();
+            });
+    });
+
+    it('Test POST /payment/add 0', (done) => {
+        let data = {
+            username: 'abc',
+            payment_nickname: 'chase',
+            account_number: '1234567890',
+            routing_number: '1111111111'
+        };
+        request(server)
+            .post('/user/payment/add')
+            .send(data)
+            .expect(200)
+            .end((err, res) => {
+                expect(res.body.success).to.be.true;
+                expect(res.body.message).to.be.deep.equal('Added payment successfully.');
+                done();
+            });
+        async () => {
+            await Payment.findOne({
+                where: {
+                    username: data.username
+                }
+            }).then(payment => {
+                expect(res.body.data).to.be.deep.equal({
+                    username: payment.username,
+                    payment_nickname: payment.payment_nickname,
+                    account_number: payment.account_number,
+                    routing_number: payment.routing_number
+                });
+                done();
+            });
+        };
+    });
+
+    it('Test POST /user/payment 2', (done) => {
+        let data = {
+            username: 'abc'
+        };
+        request(server)
+            .get('/user/payment')
+            .send(data)
+            .expect(200)
+            .end((err, res) => {
+                expect(res.body.success).to.be.true;
+                expect(res.body.message).to.be.deep.equal('Fetch payments successfully.');
+                done();
+            });
+        async () => {
+            await Payment.findAll({
+                where: {
+                    username: data.username
+                }
+            }).then(payments => {
+                tmp = arr[0];
+                for (let payment in payments) {
+                    tmp.push({
+                        payment_nickname: payment.payment_nickname,
+                            account_number: payment.account_number,
+                            routing_number: payment.routing_number
+                    });
+                }
+                expect(res.body.data).to.be.deep.equal(tmp);
+            });
+        };
+    });
+
+    it('Test POST /user/payment/update 0', (done) => {
+        let data = {
+            username: 'abc',
+            payment_nickname: 'chase',
+            routing_number: '0987654321',
+            account_number: '2222222222'
+        };
+        request(server)
+            .post('/user/payment/update')
+            .send(data)
+            .expect(200)
+            .end((err, res) => {
+                expect(res.body.success).to.be.true;
+                expect(res.body.message).to.be.deep.equal('Update payment successfully.');
+                done();
+            });
+        async () => {
+            await Payment.findOne({
+                where: {
+                    username: data.username,
+                    payment_nickname: data.payment_nickname
+                }
+            }).then(payment => {
+                expect(res.body.data).to.be.deep.equal({
+                    username: payment.username,
+                    payment_nickname: payment.payment_nickname,
+                    routing_number: payment.routing_number,
+                    account_number: payment.account_number
+                });
             });
         };
     });
