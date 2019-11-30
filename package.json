@@ -15,15 +15,14 @@
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
-    "koa-session": "^5.12.3",
     "mongoose": "^5.7.11",
     "mysql": "^2.17.1",
     "mysql2": "^2.0.1",
+    "node-fetch": "^2.6.0",
     "node-uuid": "^1.4.8",
     "nodemon": "^1.19.4",
     "path": "^0.12.7",
     "request": "^2.88.0",
-    "request-promise": "^4.2.5",
     "sequelize": "^5.21.2"
   },
   "devDependencies": {
