@@ -1,4 +1,4 @@
-const db = require('../utils/db');
+const db = require('../db/db');
 const User = require('./User')
 
 var Payment = db.defineModel('user_payment', {

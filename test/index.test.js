@@ -3,7 +3,7 @@ const
     app = require('../app');
 
 describe('Test index APIs', () => {
-    let server = app.listen(9900);
+    let server = app.listen(9800);
     it('Test GET /index', async () => {
         let res = await request(server)
             .get('/index')
