@@ -53,7 +53,9 @@ const Login = async (ctx) => {
     };
     let post = ctx.request.body;
     await User.findOne({
-        username: post.username
+        where: {
+            username: post.username
+        }
     }).then(user => {
         if (!user) {
             result.message = 'No such user.';
@@ -82,7 +84,9 @@ const LogOut = async (ctx) => {
     }
     let post = ctx.request.body;
     await User.findOne({
-        username: post.username
+        where: {
+            username: post.username
+        }
     }).then(async (user) => {
         if (!user) {
             result.message = 'No such user.'
@@ -107,7 +111,9 @@ const ForgotPassword = async (ctx) => {
     };
     let post = ctx.request.body;
     await User.findOne({
-        username: post.username
+        where: {
+            username: post.username
+        }
     }).then(async (user) => {
         if (!user) {
             result.message = 'No such user.'
@@ -134,7 +140,9 @@ const UpdateProfile = async (ctx) => {
     };
     let post = ctx.request.body;
     await User.findOne({
-        username: post.username
+        where: {
+            username: post.username
+        }
     }).then(async (user) => {
         if (!user) {
             result.message = 'No such user.'
