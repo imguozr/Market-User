@@ -1,12 +1,17 @@
 const db = require('../utils/db');
+const User = require('./User')
 
-module.exports = db.defineModel('user_payment', {
-    user_id: {
+var Payment = db.defineModel('user_payment', {
+    payment_id: {
         type: db.ID_TYPE,
-        references: 'user',
-        referencesKey: 'id'
+        primaryKey: true,
+        defaultValue: db.UUIDV4
     },
     payment_nickname: db.STRING(50),
     account_number: db.STRING(10),
     routing_number: db.STRING(10)
 });
+
+Payment.belongsTo(User);
+
+module.exports = Payment;

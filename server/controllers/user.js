@@ -14,7 +14,9 @@ const Register = async (ctx) => {
 
     let post = ctx.request.body;
     await User.findOne({
-        name: post.name
+        where: {
+            username: post.username
+        }
     }).then(user => {
         if (user) {
             result.message = 'Registered before!';
@@ -26,17 +28,17 @@ const Register = async (ctx) => {
     });
 
     let userResult = await User.create({
-        name: post.name,
+        username: post.username,
         password: post.password,
         email: post.email,
         address: post.address,
-        token: createToken(post.name)
+        token: createToken(post.username)
     });
     if (userResult) {
         result.success = true;
         result.message = 'Registered successfully';
         result.data = {
-            name: post.name,
+            username: post.username,
             email: post.email
         };
     }
@@ -51,21 +53,21 @@ const Login = async (ctx) => {
     };
     let post = ctx.request.body;
     await User.findOne({
-        name: post.name
+        username: post.username
     }).then(user => {
         if (!user) {
-            result.message = 'No such user';
+            result.message = 'No such user.';
             ctx.body = result;
             return false;
         } else if (post.password === user.password) {
             result.success = true;
             result.message = 'Login Successfully!';
             result.data = {
-                name: user.name,
-                token: createToken(user.name)
+                username: user.username,
+                token: createToken(user.username)
             };
         } else {
-            result.message = 'Wrong Password';
+            result.message = 'Wrong Password.';
         }
     }).catch(err => {
         ctx.body = err;
@@ -80,7 +82,7 @@ const LogOut = async (ctx) => {
     }
     let post = ctx.request.body;
     await User.findOne({
-        name: post.name
+        username: post.username
     }).then(async (user) => {
         if (!user) {
             result.message = 'No such user.'
@@ -105,7 +107,7 @@ const ForgotPassword = async (ctx) => {
     };
     let post = ctx.request.body;
     await User.findOne({
-        name: post.name
+        username: post.username
     }).then(async (user) => {
         if (!user) {
             result.message = 'No such user.'
@@ -132,7 +134,7 @@ const UpdateProfile = async (ctx) => {
     };
     let post = ctx.request.body;
     await User.findOne({
-        name: post.name
+        username: post.username
     }).then(async (user) => {
         if (!user) {
             result.message = 'No such user.'
@@ -140,7 +142,7 @@ const UpdateProfile = async (ctx) => {
             return false;
         } else {
             for (const [key, value] of post.entries()) {
-                if (! key === 'name') {
+                if (!key === 'username') {
                     user[key] = value;
                 }
             }
@@ -212,13 +214,13 @@ const GetGithubAccessToken = async (ctx, next) => {
 };
 
 module.exports = (router) => {
-    router.post('/register', Register),
-        router.post('/login', Login),
-        router.post('/logout', LogOut),
-        router.post('/forgot', ForgotPassword)
-    router.get('/getToken', checkToken, GetToken),
-        router.get('/auth/github', GetGithub),
-        router.get('/auth/github/callback', GetGithubAccessToken),
-        router.get('/auth/github/user', GetGithubUser)
+    router.post('/register', Register);
+    router.post('/login', Login);
+    router.post('/logout', LogOut);
+    router.post('/forgot', ForgotPassword);
+    router.get('/getToken', checkToken, GetToken);
+    router.get('/auth/github', GetGithub);
+    router.get('/auth/github/callback', GetGithubAccessToken);
+    router.get('/auth/github/user', GetGithubUser);
 }
 

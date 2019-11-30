@@ -8,7 +8,6 @@ const index = require('./server/routers/index')
 const user = require('./server/routers/user')
 
 const app = new Koa();
-// app.keys = ['FK GFW'];
 
 // log request URL:
 app.use(async (ctx, next) => {
@@ -18,8 +17,14 @@ app.use(async (ctx, next) => {
 
 app.use(bodyParser());
 
-router.use('/', index.routes(), index.allowedMethods())
-router.use('/api', user.routes(), user.allowedMethods())
+router.use('', index.routes(), index.allowedMethods())
+router.use('/user', user.routes(), user.allowedMethods())
+app.use(router.routes()).use(router.allowedMethods())
 
-app.listen(3000);
-console.log('App started at http://localhost:3000');
+module.exports = app;
+
+// app.listen(3000, () => {
+//     // console.log('[demo] test-unit is starting at port 3000')
+//     console.log('App started at http://localhost:3000');
+// });
+

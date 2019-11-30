@@ -1,12 +1,16 @@
-const db = require('../utils/db')
+const db = require('../db/db')
 
 module.exports = db.defineModel('user', {
+    username: {
+        type: db.STRING(20),
+        unique: true,
+        primaryKey: true
+    },
+    password: db.STRING(20),
     email: {
         type: db.STRING(50),
         unique: true
     },
-    password: db.STRING(20),
-    username: db.STRING(20),
     address: db.STRING(255),
     token: {
         type: db.STRING(255),
