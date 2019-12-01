@@ -3,7 +3,6 @@ const Payment = require('../models/Payment');
 const createToken = require('../middlewares/createToken');
 const checkToken = require('../middlewares/checkToken');
 
-
 const Register = async (ctx) => {
     let result = {
         success: false,

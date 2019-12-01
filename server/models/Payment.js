@@ -1,5 +1,5 @@
 const db = require('../db/db');
-const User = require('./User')
+const User = require('./User');
 
 var Payment = db.defineModel('user_payment', {
     payment_id: {
@@ -12,6 +12,6 @@ var Payment = db.defineModel('user_payment', {
     routing_number: db.STRING(10)
 });
 
-Payment.belongsTo(User, { foreignKey: 'username', targetKey: 'username' });
+Payment.belongsTo(User, { foreignKey: 'username', targetKey: 'username', allowNull: false });
 
 module.exports = Payment;

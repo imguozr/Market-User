@@ -5,6 +5,7 @@ const bodyParser = require('koa-bodyparser');
 const index = require('./server/routers/index');
 const user = require('./server/routers/user');
 const github = require('./server/routers/github');
+const stock = require('./server/routers/stock');
 
 const app = new Koa();
 
@@ -18,7 +19,8 @@ app.use(bodyParser());
 
 router.use('', index.routes(), index.allowedMethods());
 router.use('/user', user.routes(), user.allowedMethods());
-router.use('/auth', github.routes(), user.allowedMethods());
+router.use('/auth', github.routes(), github.allowedMethods());
+router.use('/stock', stock.routes(), stock.allowedMethods());
 app.use(router.routes()).use(router.allowedMethods());
 
 module.exports = app;
