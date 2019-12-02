@@ -1,4 +1,6 @@
 const fetch = require('node-fetch');
+const User = require('../models/User');
+const createToken = require('../middlewares/createToken');
 const OAuthConfig = require('../../config/auth.config');
 
 const GetGithub = async (ctx) => {
@@ -41,8 +43,36 @@ const GetGithubAccessToken = async (ctx, next) => {
             .then(res => {
                 return res.json();
             })
-            .then(res => {
-                ctx.body = { username: res.login, email: res.email };
+            .then(async (res) => {
+                let username = res.login;
+                let result = {
+                    registered: false,
+                    data: null
+                };
+                await User.findOne({
+                    where: {
+                        username: username
+                    }
+                }).then(async (user) => {
+                    if (!user) {
+                        result.registered = false;
+                        result.data = { username: res.login, email: res.email };
+                        ctx.body = result;
+                        return false;
+                    } else {
+                        result.registered = true;
+                        let token = createToken(user.username);
+                        user.token = token;
+                        await user.save();
+                        result.data = {
+                            username: username,
+                            token: token
+                        };
+                    }
+                }).catch(err => {
+                    ctx.body = err;
+                });
+                ctx.body = result;
             });
     }).catch(e => {
         console.log(e);
