@@ -12,6 +12,10 @@ module.exports = db.defineModel('user', {
         unique: true
     },
     address: db.STRING(255),
+    balance: {
+        type: db.INTEGER,
+        defaultValue: 0
+    },
     token: {
         type: db.STRING(255),
         allowNull: true
