@@ -360,6 +360,112 @@ const UpdatePayment = async (ctx) => {
     ctx.body = result;
 };
 
+const BalanceToPayment = async (ctx) => {
+    let result = {
+        success: false,
+        message: '',
+        data: null
+    };
+    let post = ctx.request.body;
+    await User.findOne({
+        where: {
+            username: post.username
+        }
+    }).then(async (user) => {
+        if (!user) {
+            result.message = 'No such user.';
+            ctx.body = result;
+            return false;
+        } else if (user.token === null) {
+            result.message = 'Please Login.';
+            ctx.body = result;
+            return false;
+        } else if (user.balance < post.balance){
+            result.message = 'Insufficient balance.';
+            ctx.body = result;
+            return false;
+        } else {
+            await Payment.findOne({
+                where: {
+                    username: post.username,
+                    payment_nickname: post.payment_nickname
+                }
+            }).then(async (payment) => {
+                if (!payment) {
+                    result.message = 'No such payment.';
+                    ctx.body = result;
+                    return false;
+                } else {
+                    user.balance -= post.fund;
+                    await user.save();
+                    result.success = true;
+                    result.message = 'Cashed out successfully.';
+                    result.data = {
+                        username: user.username,
+                        remained_balance: user.balance
+                    };
+                }
+            }).catch(err => {
+                ctx.body = err;
+            });
+        }
+        ctx.body = result;
+    }).catch(err => {
+        ctx.body = err;
+    });
+};
+
+const PaymentToBalance = async (ctx) => {
+    let result = {
+        success: false,
+        message: '',
+        data: null
+    };
+    let post = ctx.request.body;
+    await User.findOne({
+        where: {
+            username: post.username
+        }
+    }).then(async (user) => {
+        if (!user) {
+            result.message = 'No such user.';
+            ctx.body = result;
+            return false;
+        } else if (user.token === null) {
+            result.message = 'Please Login.';
+            ctx.body = result;
+            return false;
+        } else {
+            await Payment.findOne({
+                where: {
+                    username: post.username,
+                    payment_nickname: post.payment_nickname
+                }
+            }).then(async (payment) => {
+                if (!payment) {
+                    result.message = 'No such payment.';
+                    ctx.body = result;
+                    return false;
+                } else {
+                    user.balance += post.fund;
+                    await user.save();
+                    result.success = true;
+                    result.message = 'Deposit successfully.';
+                    result.data = {
+                        username: user.username,
+                        remained_balance: user.balance
+                    };
+                }
+            }).catch(err => {
+                ctx.body = err;
+            });
+        }
+    }).catch(err => {
+        ctx.body = err;
+    });
+    ctx.body = result;
+};
+
 const GetToken = async (ctx) => {
     ctx.body = ctx.token;
 };
@@ -374,6 +480,8 @@ module.exports = (router) => {
     router.get('/payment', GetPayment);
     router.post('/payment/add', AddPayment);
     router.post('/payment/update', UpdatePayment);
+    router.post('/balance/cashout', BalanceToPayment);
+    router.post('/balance/deposit', PaymentToBalance);
     router.get('/getToken', checkToken, GetToken);
 };
 

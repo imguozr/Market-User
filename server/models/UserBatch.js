@@ -2,7 +2,7 @@ const db = require('../db/db');
 const User = require('./User');
 const Batch = require('./Batch');
 
-const UserStock = db.defineModel('user_stock', {
+const UserBatch = db.defineModel('user_batch', {
     username: {
         primaryKey: true,
         references: 'user',
@@ -15,7 +15,7 @@ const UserStock = db.defineModel('user_stock', {
     }
 });
 
-UserStock.belongsTo(User, { foreignKey: 'username', targetKey: 'username' });
-UserStock.belongsTo(Batch, { foreignKey: 'batch_id', targetKey: 'batch_id' })
+UserBatch.belongsTo(User, { foreignKey: 'username', targetKey: 'username' });
+UserBatch.belongsTo(Batch, { foreignKey: 'batch_id', targetKey: 'batch_id' });
 
-module.exports = UserStock;
+module.exports = UserBatch;

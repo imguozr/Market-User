@@ -4,7 +4,8 @@ const User = require('../models/User');
 const Payment = require('../models/Payment');
 const Stock = require('../models/Stock');
 const Batch = require('../models/Batch');
-const UserStock = require('../models/User-Stock');
+const UserBatch = require('../models/UserBatch');
+const UserStock = require('../models/UserStock');
 
 const GetStockName = async (ctx) => {
     let result = {
@@ -55,30 +56,8 @@ const GetAllStockNames = async (ctx) => {
     ctx.body = result;
 };
 
-const GetStockPrice = async (ctx) => {
-    let url = '';
-    let symbol = ctx.params.symbol;
-    let result = {
-        success: false,
-        data: null
-    };
-    request({
-        url: url,
-        method: 'GET',
-        json: true,
-        body: JSON.stringify({ symbol: symbol })
-    }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            result.success = true;
-            result.data.symbol = symbol;
-            result.data.price = body.price;
-        }
-    });
-    ctx.body = result;
-};
-
 async function getUserBatch(username) {
-    await UserStock.findAll({
+    await UserBatch.findAll({
         where: {
             username: username
         },
@@ -101,47 +80,47 @@ const GetUserStocks = async (ctx) => {
         message: '',
         data: null
     };
-    let batches = await getUserBatch(username);
-    if (!batches) {
-        for (let batch_id in batches) {
-            await Batch.findOne({
+    await User.findOne({
+        where: {
+            username: username
+        }
+    }).then(async (user) => {
+        if (!user) {
+            result.message = 'No such user.';
+            ctx.body = result;
+            return false;
+        } else if (user.token === null) {
+            result.message = 'Please Login.';
+            ctx.body = result;
+            return false;
+        } else {
+            await UserStock.findAll({
                 where: {
-                    batch_id: batch_id
+                    username: username
                 }
-            }).then(batch => {
-                if (!batch) {
-                    result.message = 'Wrong data.';
+            }).then(userStocks => {
+                if (userStocks.length === 0) {
+                    result.message = 'This user has no stocks.';
                     ctx.body = result;
                     return false;
                 } else {
-                    result.data.push({
-                        symbol: batch.symbol,
-                        quantity: batch.quantity,
-                        bought_time: batch.bought_time
-                    });
+                    result.success = true;
+                    result.message = 'Fetch user\'s stocks successfully.';
+                    for (let userStock in userStocks) {
+                        result.data.stocks.push({
+                            symbol: userStock.symbol,
+                            quantity: userStock.quantity
+                        });
+                    }
                 }
             }).catch(err => {
                 ctx.body = err;
             });
         }
-    }
+    }).catch(err => {
+        ctx.body = err;
+    });
     ctx.body = result;
-};
-
-const BuyStock = async (ctx) => {
-
-};
-
-const SellStock = async (ctx) => {
-
-};
-
-const BuyStockRecurringly = async (ctx) => {
-
-};
-
-const SellStockRecurringly = async (ctx) => {
-
 };
 
 module.exports = (router) => {
@@ -150,6 +129,4 @@ module.exports = (router) => {
     // router.get('/price/:symbol', GetStockPrice);
     // router.get('/batch/:username', GetUserBatch);
     router.get('/all/:username', GetUserStocks);
-    router.post('/buy', BuyStock);
-    router.post('/sell', SellStock);
 };

@@ -463,8 +463,8 @@ describe('Testing user APIs', () => {
                 for (let payment in payments) {
                     tmp.push({
                         payment_nickname: payment.payment_nickname,
-                            account_number: payment.account_number,
-                            routing_number: payment.routing_number
+                        account_number: payment.account_number,
+                        routing_number: payment.routing_number
                     });
                 }
                 expect(res.body.data).to.be.deep.equal(tmp);
@@ -503,6 +503,48 @@ describe('Testing user APIs', () => {
                 });
             });
         };
+    });
+
+    it('Test POST /balance/deposit 0', (done) => {
+        let data = {
+            username: 'abc',
+            payment_nickname: 'chase',
+            fund: 100
+        };
+        request(server)
+            .post('/user/balance/deposit')
+            .send(data)
+            .expect(200)
+            .end((err, res) => {
+                expect(res.body.success).to.be.true;
+                expect(res.body.message).to.be.equal('Deposit successfully.');
+                expect(res.body.data).to.be.deep.equal({
+                    username: 'abc',
+                    remained_balance: 100
+                });
+                done();
+            });
+    });
+
+    it('Test POST /balance/cashout 0', (done) => {
+        let data = {
+            username: 'abc',
+            payment_nickname: 'chase',
+            fund: 50
+        };
+        request(server)
+            .post('/user/balance/cashout')
+            .send(data)
+            .expect(200)
+            .end((err, res) => {
+                expect(res.body.success).to.be.true;
+                expect(res.body.message).to.be.equal('Cashed out successfully.');
+                expect(res.body.data).to.be.deep.equal({
+                    username: 'abc',
+                    remained_balance: 50
+                });
+                done();
+            });
     });
 
 });
