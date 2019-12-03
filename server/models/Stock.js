@@ -7,7 +7,7 @@ module.exports = db.defineModel('stock', {
         unique: true
     },
     name: {
-        type: db.STRING(25),
+        type: db.STRING(256),
         unique: true
     }
 });

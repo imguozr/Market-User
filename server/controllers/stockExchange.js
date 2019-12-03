@@ -63,13 +63,14 @@ const BuyStock = async (ctx) => {
         } else {
             user.balance -= totalPrice;
             await user.save();
-            let now = Date.now();
+            console.log(1);
             let flag1 = false;
             await Batch.create({
-                bought_time: now,
+                bought_time: Date.now(),
                 quantity: post.quantity,
                 symbol: post.symbol
-            }, { logging: true }).then(async (batch) => {
+            }).then(async (batch) => {
+                console.log(2);
                 let batch_id = batch.dataValues.batch_id;
                 let userBatchResult = await UserBatch.create({
                     username: post.username,

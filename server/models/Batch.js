@@ -1,7 +1,7 @@
 const db = require('../db/db');
 const Stock = require('./Stock');
 
-var Batch = db.defineModel('batch', {
+module.exports = db.defineModel('batch', {
     batch_id: {
         type: db.ID_TYPE,
         primaryKey: true,
@@ -11,9 +11,13 @@ var Batch = db.defineModel('batch', {
         type: db.BIGINT,
         allowNull: false
     },
-    quantity: db.INTEGER
+    quantity: db.INTEGER,
+    symbol: {
+        type: db.STRING(10),
+        primaryKey: true,
+        references: {
+            model: Stock,
+            key: 'symbol'
+        }
+    }
 });
-
-Batch.belongsTo(Stock, { foreignKey: 'symbol', targetKey: 'symbol' });
-
-module.exports = Batch;

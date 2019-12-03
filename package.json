@@ -4,12 +4,13 @@
   "description": "User module of stock exchange system.",
   "main": "app.js",
   "scripts": {
-    "test": "node server/db/init.js&&./node_modules/.bin/mocha",
+    "test": "node server/db/init.js&&node server/db/dump.js&&./node_modules/.bin/mocha",
     "start": "nodemon app.js"
   },
   "author": "imguozr",
   "license": "MIT",
   "dependencies": {
+    "csv": "^5.3.0",
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "kcors": "^2.2.2",

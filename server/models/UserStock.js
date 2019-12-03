@@ -2,24 +2,25 @@ const db = require('../db/db');
 const User = require('./User');
 const Stock = require('./Stock');
 
-const UserStock = db.defineModel('user_stock', {
+module.exports = db.defineModel('user_stock', {
     username: {
         primaryKey: true,
-        references: 'user',
-        referencesKey: 'username'
+        type: db.STRING(20),
+        references: {
+            model: User,
+            key: 'username'
+        }
     },
-    symbol:{
+    symbol: {
         primaryKey: true,
-        references: 'stock',
-        referencesKey: 'symbol'
+        type: db.STRING(10),
+        references: {
+            model: Stock,
+            key: 'symbol'
+        }
     },
     quantity: {
         type: db.INTEGER,
         defaultValue: 0
     }
 });
-
-UserStock.belongsTo(User, { foreignKey: 'username', targetKey: 'username' });
-UserStock.belongsTo(Stock, { foreignKey: 'symbol', targetKey: 'symbol' });
-
-module.exports = UserStock;

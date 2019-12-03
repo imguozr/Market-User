@@ -10,7 +10,8 @@ var sequelize = new Sequelize(dbConfig.DATABASE, dbConfig.USERNAME, dbConfig.PAS
         max: 5,
         min: 0,
         idle: 10000
-    }
+    },
+    logQueryParameters: true
 });
 
 function defineModel(name, attributes) {
