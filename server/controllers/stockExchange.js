@@ -366,5 +366,5 @@ module.exports = (router) => {
     router.post('/buy/recur', BuyRecur);
     router.post('/sell/recur', SellRecur);
     router.post('/schedule/update', UpdateSchedule);
-    router.post('/schedule/cancel', UpdateSchedule);
+    router.post('/schedule/cancel', CancelSchedule);
 };
