@@ -1,4 +1,5 @@
 const bull = require('bull');
+const request = require('request');
 const redisConfig = require('../../config/redis.config');
 
 const User = require('../models/User');
@@ -6,24 +7,29 @@ const Batch = require('../models/Batch');
 const UserBatch = require('../models/UserBatch');
 const UserStock = require('../models/UserStock');
 
-const buyQueue = new bull('buy queue', { redis: { host: redisConfig.HOST, port: redisConfig.PORT } })
-const sellQueue = new bull('sell queue', { redis: { host: redisConfig.HOST, port: redisConfig.PORT } })
+const buyQueue = new bull('buy queue', { redis: { host: redisConfig.HOST, port: redisConfig.PORT } });
+const sellQueue = new bull('sell queue', { redis: { host: redisConfig.HOST, port: redisConfig.PORT } });
 
 const Buy = async (ctx) => {
     result = {
         success: false,
-        message: ''
+        message: '',
+        data: null
     };
-    buyQueue.add({
+    await buyQueue.add({
         username: ctx.request.body.username,
         symbol: ctx.request.body.symbol,
         quantity: ctx.request.body.quantity,
         add_time: Date.now()
     }, { lifo: true }).then(job => {
-        result.data.jobID = job.id;
+        result.data = {
+            jobID: job.id
+        };
         result.success = true;
-        result.message = 'Your purchase has been placed.'
+        result.message = 'Your purchase has been placed.';
         console.log('Add buy job to queue.');
+    }).catch(err => {
+        ctx.body = err;
     });
     ctx.body = result;
 };
@@ -31,15 +37,18 @@ const Buy = async (ctx) => {
 const Sell = async (ctx) => {
     result = {
         success: false,
-        message: ''
+        message: '',
+        data: null
     };
-    sellQueue.add({
+    await sellQueue.add({
         username: ctx.request.body.username,
         symbol: ctx.request.body.symbol,
         quantity: ctx.request.body.quantity,
         add_time: Date.now()
     }, { lifo: true }).then(job => {
-        result.data.jobID = job.id;
+        result.data = {
+            jobID: job.id
+        };
         result.success = true;
         result.message = 'Your selling has been placed.'
         console.log('Add sell job to queue.');
@@ -54,7 +63,7 @@ const BuyRecur = async (ctx) => {
         data: null
     };
     let recur = ctx.request.body.recur;
-    buyQueue.add({
+    await buyQueue.add({
         username: ctx.request.body.username,
         symbol: ctx.request.body.symbol,
         quantity: ctx.request.body.quantity,
@@ -65,7 +74,9 @@ const BuyRecur = async (ctx) => {
             limit: recur.limit
         }
     }).then(job => {
-        result.data.jobID = job.id;
+        result.data = {
+            jobID: job.id
+        };
         result.success = true;
         result.message = 'Your purchase has been placed.'
         console.log('Add buy job to queue.');
@@ -80,7 +91,7 @@ const SellRecur = async (ctx) => {
         data: null
     };
     let recur = ctx.request.body.recur;
-    sellQueue.add({
+    await sellQueue.add({
         username: ctx.request.body.username,
         symbol: ctx.request.body.symbol,
         quantity: ctx.request.body.quantity,
@@ -91,7 +102,9 @@ const SellRecur = async (ctx) => {
             limit: recur.limit
         }
     }).then(job => {
-        result.data.jobID = job.id;
+        result.data = {
+            jobID: job.id
+        };
         result.success = true;
         result.message = 'Your selling has been placed.'
         console.log('Add sell job to queue.');
@@ -117,7 +130,7 @@ const UpdateSchedule = async (ctx) => {
         ctx.body = result;
         return result;
     }
-    job.update({
+    await job.update({
         username: ctx.request.body.username,
         symbol: ctx.request.body.symbol,
         quantity: ctx.request.body.quantity,
@@ -150,13 +163,18 @@ const CancelSchedule = async (ctx) => {
         ctx.body = result;
         return result;
     }
-    job.remove();
+    await job.remove();
     result.success = true;
     result.message = 'Cancel schedule successfully.';
     ctx.body = result;
 };
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 buyQueue.process(async (job) => {
+    await sleep(30000);
     post = {
         username: job.username,
         symbol: job.symbol,
@@ -169,6 +187,7 @@ buyQueue.process(async (job) => {
 });
 
 sellQueue.process(async (job) => {
+    await sleep(30000);
     post = {
         username: job.username,
         symbol: job.symbol,
@@ -357,7 +376,7 @@ async function sellStock(post) {
     }).catch(err => {
         return err;
     });
-    return ctx.body;
+    return result;
 };
 
 module.exports = (router) => {
