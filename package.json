@@ -7,9 +7,19 @@
     "test": "node server/db/init.js&&node server/db/dump.js&&./node_modules/.bin/mocha",
     "start": "nodemon app.js"
   },
+  "apidoc": {
+    "name": "market-user",
+    "version": "0.0.1",
+    "description": "Market User System API document",
+    "apidoc": {
+      "title": "Market User System",
+      "url": "http://localhost:3300/"
+    }
+  },
   "author": "imguozr",
   "license": "MIT",
   "dependencies": {
+    "apidoc": "^0.19.0",
     "bull": "^3.12.1",
     "csv": "^5.3.0",
     "fs": "0.0.1-security",

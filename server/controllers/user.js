@@ -3,6 +3,39 @@ const Payment = require('../models/Payment');
 const createToken = require('../middlewares/createToken');
 const checkToken = require('../middlewares/checkToken');
 
+/**
+ * @api {post} /user/register User Register
+ * @apiName Register
+ * @apiGroup User
+ *
+ * @apiParam {String} username  Username.
+ * @apiParam {String} password  Encrypted password.
+ * @apiParam {String} email     Email.
+ * @apiParam {String} address   Address.
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc",
+ *       "password": "124rweb4y67guaxvtc^%RF%^&7",
+ *       "email": "123@4567.com",
+ *       "address": "9 W asd Rd."
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccess {Object} data            User information.
+ * @apiSuccess {String} data.username   Username.
+ * @apiSuccess {String} data.email      Email.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Registered successfully.",
+ *       "data": {
+ *          "username": "abc",
+ *          "email": "123@4567.com"
+ *       }
+ *   }
+ */
 const Register = async (ctx) => {
     let result = {
         success: false,
@@ -44,6 +77,35 @@ const Register = async (ctx) => {
     ctx.body = result;
 };
 
+/**
+ * @api {post} /user/login User Login
+ * @apiName Login
+ * @apiGroup User
+ *
+ * @apiParam {String} username  Username.
+ * @apiParam {String} password  Encrypted password.
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc",
+ *       "password": "124rweb4y67guaxvtc^%RF%^&7"
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccess {Object} data            User information.
+ * @apiSuccess {String} data.username   Username.
+ * @apiSuccess {String} data.token      Token to judge user status.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Login successfully.",
+ *       "data": {
+ *          "username": "abc",
+ *          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWJjIiwiaWF0IjoxNTc1NDI0OTk1LCJleHAiOjE1NzU0MjUwMDV9.Ci9UcN2zvlLKoyj5as9SI_UYpbsVPqNihmzPpjHW_cs"
+ *       }
+ *   }
+ */
 const Login = async (ctx) => {
     let result = {
         success: false,
@@ -79,6 +141,26 @@ const Login = async (ctx) => {
     ctx.body = result;
 };
 
+/**
+ * @api {post} /user/logout User Logout
+ * @apiName Logout
+ * @apiGroup User
+ *
+ * @apiParam {String} username  Username.
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc"
+ *   }
+ *
+ * @apiSuccess {Boolean} success    Success or not.
+ * @apiSuccess {String} message     Message.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Logged out successfully."
+ *   }
+ */
 const LogOut = async (ctx) => {
     let result = {
         success: false,
@@ -106,6 +188,30 @@ const LogOut = async (ctx) => {
     ctx.body = result;
 };
 
+/**
+ * @api {post} /user/forgot User Forgot Password
+ * @apiName Forgot
+ * @apiGroup User
+ *
+ * @apiParam {String} username  Username.
+ * @apiParam {String} oldPassword  Old password.
+ * @apiParam {String} newPassword  New password.
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc",
+ *       "oldPassword": "124r1237",
+ *       "newPassword": "axf25ersdg"
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Reset password successfully, please re-login."
+ *   }
+ */
 const ForgotPassword = async (ctx) => {
     let result = {
         success: false,
@@ -140,6 +246,37 @@ const ForgotPassword = async (ctx) => {
     ctx.body = result;
 };
 
+/**
+ * @api {get} /user/profile Get User Profile
+ * @apiName GetProfile
+ * @apiGroup User
+ *
+ * @apiParam {String} username  Username.
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc"
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccess {Object} data            User information.
+ * @apiSuccess {String} data.username   Username.
+ * @apiSuccess {String} data.email      New email.
+ * @apiSuccess {String} data.address    New address.
+ * @apiSuccess {Integer} data.balance   Balance.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Fetch profile successfully.",
+ *       "data": {
+ *          "username": "abc",
+ *          "email": "345@123.com",
+ *          "address": "10 N iojgfs Dr.",
+ *          "balance": 0
+ *       }
+ *   }
+ */
 const GetProfile = async (ctx) => {
     let result = {
         success: false,
@@ -166,7 +303,8 @@ const GetProfile = async (ctx) => {
             result.data = {
                 username: user.username,
                 email: user.email,
-                address: user.address
+                address: user.address,
+                balance: user.balance
             };
         }
     }).catch(err => {
@@ -175,6 +313,39 @@ const GetProfile = async (ctx) => {
     ctx.body = result;
 };
 
+/**
+ * @api {post} /user/profile/update Update User Profile
+ * @apiName UpdateProfile
+ * @apiGroup User
+ *
+ * @apiParam {String} username  Username.
+ * @apiParam {String} email     Email.
+ * @apiParam {String} address   Address.
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc",
+ *       "email": "124@axa.net",
+ *       "address": "80 W rwg Rd."
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccess {Object} data            User information.
+ * @apiSuccess {String} data.username   Username.
+ * @apiSuccess {String} data.email      Email.
+ * @apiSuccess {String} data.address    Address.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Update profile successfully.",
+ *       "data": {
+ *          "username": "abc",
+ *          "email": "124@axa.net",
+ *          "address": "80 W rwg Rd."
+ *       }
+ *   }
+ */
 const UpdateProfile = async (ctx) => {
     let result = {
         success: false,
@@ -196,12 +367,8 @@ const UpdateProfile = async (ctx) => {
             ctx.body = result;
             return false;
         } else {
-            for (let key in post) {
-                value = post[key];
-                if (key !== 'username') {
-                    user[key] = value;
-                }
-            }
+            user.email = post.email;
+            user.address = post.address;
             await user.save();
             result.success = true;
             result.message = 'Update profile successfully.';
@@ -213,6 +380,37 @@ const UpdateProfile = async (ctx) => {
     ctx.body = result;
 };
 
+/**
+ * @api {get} /user/payment Get User Payment Methods
+ * @apiName GetPayment
+ * @apiGroup User
+ *
+ * @apiParam {String} username  Username.
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc"
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccess {Object} data            User information.
+ * @apiSuccess {String} data.username   Username.
+ * @apiSuccess {String} data.payment_nickname     Payment nickname.
+ * @apiSuccess {String} data.account_number     Account number.
+ * @apiSuccess {String} data.routing_number     Routing number.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Fetch payments successfully.",
+ *       "data": {
+ *          "username": "abc",
+ *          "payment_nickname": "chase",
+ *          "account_number": "1234567890",
+ *          "routing_number": "1112223331"
+ *       }
+ *   }
+ */
 const GetPayment = async (ctx) => {
     let result = {
         success: false,
@@ -265,6 +463,43 @@ const GetPayment = async (ctx) => {
     ctx.body = result;
 };
 
+/**
+ * @api {post} /user/payment/add Add User Payment Method
+ * @apiName AddPayment
+ * @apiGroup User
+ *
+ * @apiParam {String} username          Username.
+ * @apiParam {String} payment_nickname  Payment nickname.
+ * @apiParam {String} account_number    Account number.
+ * @apiParam {String} routing_number    Routing number.
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc",
+ *       "payment_nickname": "chase",
+ *       "account_number": "1234567890",
+ *       "routing_number": "1112223331"
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccess {Object} data            User information.
+ * @apiSuccess {String} data.username   Username.
+ * @apiSuccess {String} data.payment_nickname     Payment nickname.
+ * @apiSuccess {String} data.account_number     Account number.
+ * @apiSuccess {String} data.routing_number     Routing number.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Add payment successfully.",
+ *       "data": {
+ *          "username": "abc",
+ *          "payment_nickname": "chase",
+ *          "account_number": "1234567890",
+ *          "routing_number": "1112223331"
+ *       }
+ *   }
+ */
 const AddPayment = async (ctx) => {
     let result = {
         success: false,
@@ -296,7 +531,7 @@ const AddPayment = async (ctx) => {
             });
             if (paymentResult) {
                 result.success = true;
-                result.message = 'Added payment successfully.';
+                result.message = 'Add payment successfully.';
                 result.data = {
                     username: post.username,
                     payment_nickname: post.payment_nickname,
@@ -311,6 +546,43 @@ const AddPayment = async (ctx) => {
     ctx.body = result;
 };
 
+/**
+ * @api {post} /user/payment/update Update User Payment Method
+ * @apiName UpdatePayment
+ * @apiGroup User
+ *
+ * @apiParam {String} username          Username.
+ * @apiParam {String} payment_nickname  Payment nickname. (NOT changable)
+ * @apiParam {String} account_number    Account number.
+ * @apiParam {String} routing_number    Routing number.
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc",
+ *       "payment_nickname": "chase",
+ *       "account_number": "1234567890",
+ *       "routing_number": "1112344431"
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccess {Object} data            User information.
+ * @apiSuccess {String} data.username   Username.
+ * @apiSuccess {String} data.payment_nickname     Payment nickname.
+ * @apiSuccess {String} data.account_number     Account number.
+ * @apiSuccess {String} data.routing_number     Routing number.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Add payment successfully.",
+ *       "data": {
+ *          "username": "abc",
+ *          "payment_nickname": "chase",
+ *          "account_number": "1234567890",
+ *          "routing_number": "1112344431"
+ *       }
+ *   }
+ */
 const UpdatePayment = async (ctx) => {
     let result = {
         success: false,
@@ -360,6 +632,38 @@ const UpdatePayment = async (ctx) => {
     ctx.body = result;
 };
 
+/**
+ * @api {post} /user/balance/cashout Balance To Payment Account
+ * @apiName BalanceToPayment
+ * @apiGroup User
+ *
+ * @apiParam {String} username          Username.
+ * @apiParam {String} payment_nickname  Payment nickname.
+ * @apiParam {Integer} fund              Amount of money.
+
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc",
+ *       "payment_nickname": "chase",
+ *       "fund": 50,
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccess {Object} data            User information.
+ * @apiSuccess {String} data.username   Username.
+ * @apiSuccess {Integer} data.remained_balance     Remained balance.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Cashed out successfully.",
+ *       "data": {
+ *          "username": "abc",
+ *          "remained_balance": 50,
+ *       }
+ *   }
+ */
 const BalanceToPayment = async (ctx) => {
     let result = {
         success: false,
@@ -380,7 +684,7 @@ const BalanceToPayment = async (ctx) => {
             result.message = 'Please Login.';
             ctx.body = result;
             return false;
-        } else if (user.balance < post.balance){
+        } else if (user.balance < post.balance) {
             result.message = 'Insufficient balance.';
             ctx.body = result;
             return false;
@@ -415,6 +719,38 @@ const BalanceToPayment = async (ctx) => {
     });
 };
 
+/**
+ * @api {post} /user/balance/deposit Payment Account To Balance
+ * @apiName PaymentToBalance
+ * @apiGroup User
+ *
+ * @apiParam {String} username          Username.
+ * @apiParam {String} payment_nickname  Payment nickname.
+ * @apiParam {Integer} fund              Amount of money.
+
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc",
+ *       "payment_nickname": "chase",
+ *       "fund": 50,
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccess {Object} data            User information.
+ * @apiSuccess {String} data.username   Username.
+ * @apiSuccess {Integer} data.remained_balance     Remained balance.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Deposit successfully.",
+ *       "data": {
+ *          "username": "abc",
+ *          "remained_balance": 50,
+ *       }
+ *   }
+ */
 const PaymentToBalance = async (ctx) => {
     let result = {
         success: false,

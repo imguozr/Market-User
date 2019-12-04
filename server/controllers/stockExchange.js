@@ -10,6 +10,36 @@ const UserStock = require('../models/UserStock');
 const buyQueue = new bull('buy queue', { redis: { host: redisConfig.HOST, port: redisConfig.PORT } });
 const sellQueue = new bull('sell queue', { redis: { host: redisConfig.HOST, port: redisConfig.PORT } });
 
+/**
+ * @api {post} /stock/buy/one Buy stock at one time.
+ * @apiName BuyOne
+ * @apiGroup Stock Exchange
+ *
+ * @apiParam {String} username  Username.
+ * @apiParam {String} symbol    Stock symbol.
+ * @apiParam {String} quantity  Quantity of purchase.
+
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc",
+ *       "symbol": "APPL",
+ *       "quantity": 50,
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccess {Object} data            
+ * @apiSuccess {String} data.jobID      Queue Job id.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Your purchase has been placed.",
+ *       "data": {
+ *          "jobID": "1"
+ *       }
+ *   }
+ */
 const Buy = async (ctx) => {
     result = {
         success: false,
@@ -34,6 +64,36 @@ const Buy = async (ctx) => {
     ctx.body = result;
 };
 
+/**
+ * @api {post} /stock/sell/one Sell stock at one time.
+ * @apiName SellOne
+ * @apiGroup Stock Exchange
+ *
+ * @apiParam {String} username  Username.
+ * @apiParam {String} symbol    Stock symbol.
+ * @apiParam {String} quantity  Quantity of purchase.
+
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc",
+ *       "symbol": "APPL",
+ *       "quantity": 50,
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccess {Object} data            
+ * @apiSuccess {String} data.jobID      Queue Job id.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Your selling has been placed.",
+ *       "data": {
+ *          "jobID": "2"
+ *       }
+ *   }
+ */
 const Sell = async (ctx) => {
     result = {
         success: false,
@@ -56,6 +116,42 @@ const Sell = async (ctx) => {
     ctx.body = result;
 };
 
+/**
+ * @api {post} /stock/buy/recur Buy stock recursively.
+ * @apiName BuyRecur
+ * @apiGroup Stock Exchange
+ *
+ * @apiParam {String} username  Username.
+ * @apiParam {String} symbol    Stock symbol.
+ * @apiParam {String} quantity  Quantity of purchase.
+ * @apiParam {Object} recur
+ * @apiParam {Integer} recur.every  Fequence of purchase(ms).
+ * @apiParam {Integer} recur.limit  Total times of purchase(ms).
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc",
+ *       "symbol": "APPL",
+ *       "quantity": 50,
+ *       "recur": {
+ *          "every": 6000000,
+ *          "limit": 100
+ *       }
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccess {Object} data            
+ * @apiSuccess {String} data.jobID      Queue Job id.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Your purchase has been placed.",
+ *       "data": {
+ *          "jobID": "3"
+ *       }
+ *   }
+ */
 const BuyRecur = async (ctx) => {
     result = {
         success: false,
@@ -84,6 +180,42 @@ const BuyRecur = async (ctx) => {
     ctx.body = result;
 };
 
+/**
+ * @api {post} /stock/sell/recur Sell stock recursively.
+ * @apiName SellRecur
+ * @apiGroup Stock Exchange
+ *
+ * @apiParam {String} username  Username.
+ * @apiParam {String} symbol    Stock symbol.
+ * @apiParam {String} quantity  Quantity of purchase.
+ * @apiParam {Object} recur
+ * @apiParam {Integer} recur.every  Fequence of purchase(ms).
+ * @apiParam {Integer} recur.limit  Total times of purchase(ms).
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc",
+ *       "symbol": "APPL",
+ *       "quantity": 50,
+ *       "recur": {
+ *          "every": 6000000,
+ *          "limit": 100
+ *       }
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccess {Object} data            
+ * @apiSuccess {String} data.jobID      Queue Job id.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Your selling has been placed.",
+ *       "data": {
+ *          "jobID": "4"
+ *       }
+ *   }
+ */
 const SellRecur = async (ctx) => {
     result = {
         success: false,
@@ -112,6 +244,41 @@ const SellRecur = async (ctx) => {
     ctx.body = result;
 };
 
+/**
+ * @api {post} /stock/schedule/update Update schedule in queue.
+ * @apiName UpdateSchedule
+ * @apiGroup Stock Exchange
+ *
+ * @apiParam {String} username  Username.
+ * @apiParam {String} symbol    Stock symbol.
+ * @apiParam {String} quantity  Quantity of purchase.
+ * @apiParam {String} jobID     Original job ID.
+ * @apiParam {Object} recur     New recur info.
+ * @apiParam {Integer} recur.every  Fequence of purchase(ms).
+ * @apiParam {Integer} recur.limit  Total times of purchase(ms).
+ * @apiParam {String} behavior  Sell or buy.
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc",
+ *       "symbol": "APPL",
+ *       "quantity": 50,
+ *       "jobID": "3",
+ *       "behavior": "buy"
+ *       "recur": {
+ *          "every": 6000000,
+ *          "limit": 100
+ *       }
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Update schedule successfully.",
+ *   }
+ */
 const UpdateSchedule = async (ctx) => {
     result = {
         success: false,
@@ -146,6 +313,30 @@ const UpdateSchedule = async (ctx) => {
     ctx.body = result;
 };
 
+/**
+ * @api {post} /stock/schedule/cancel Cancel schedule in queue.
+ * @apiName CancelSchedule
+ * @apiGroup Stock Exchange
+ *
+ * @apiParam {String} username  Username.
+ * @apiParam {String} jobID     Original job ID.
+ * @apiParam {String} behavior  Sell or buy.
+ * @apiParamExample {json} Request-Example:
+ *   {
+ *       "username": "abc",
+ *       "jobID": "3",
+ *       "behavior": "buy"
+ *   }
+ *
+ * @apiSuccess {Boolean} success        Success or not.
+ * @apiSuccess {String} message         Message.
+ * @apiSuccessExample {json} Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *       "success": true,
+ *       "message": "Cancel schedule successfully.",
+ *   }
+ */
 const CancelSchedule = async (ctx) => {
     result = {
         success: false,
