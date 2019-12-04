@@ -1,0 +1,48 @@
+{
+  "name": "market-user",
+  "version": "0.0.1",
+  "description": "User module of stock exchange system.",
+  "main": "app.js",
+  "scripts": {
+    "test": "node server/db/init.js&&node server/db/dump.js&&./node_modules/.bin/mocha",
+    "start": "nodemon app.js"
+  },
+  "apidoc": {
+    "name": "market-user",
+    "version": "0.0.1",
+    "description": "Market User System API document",
+    "apidoc": {
+      "title": "Market User System",
+      "url": "http://localhost:3300/"
+    }
+  },
+  "author": "imguozr",
+  "license": "MIT",
+  "dependencies": {
+    "apidoc": "^0.19.0",
+    "bull": "^3.12.1",
+    "csv": "^5.3.0",
+    "fs": "0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "kcors": "^2.2.2",
+    "koa": "^2.11.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^7.4.0",
+    "mysql": "^2.17.1",
+    "mysql2": "^2.0.1",
+    "node-fetch": "^2.6.0",
+    "node-uuid": "^1.4.8",
+    "nodemon": "^1.19.4",
+    "path": "^0.12.7",
+    "request": "^2.88.0",
+    "sequelize": "^5.21.2",
+    "strip-ansi": "^6.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^6.6.0",
+    "mocha": "^6.2.2",
+    "supertest": "^4.0.2"
+  }
+}
