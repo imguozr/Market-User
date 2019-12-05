@@ -85,7 +85,7 @@ const GetAllStockNames = async (ctx) => {
     ctx.body = result;
 };
 
-const GetStockPrice = async (ctx) => {
+const PostStockPrice = async (ctx) => {
     let result = null;
     let path = '/stock/v1/current';
     let post = ctx.request.body;
@@ -356,6 +356,7 @@ module.exports = (router) => {
     // router.get('/name/:symbol', GetStockName);
     router.get('/name/all', GetAllStockNames);
     router.get('/user/all', GetUserStocks);
+    router.get('/v1/current', PostStockPrice);
     router.get('/v1/current', GetStockPrice);
     router.get('v1/intraday', GetStockPriceIntraday);
     router.get('v1/period', GetStockPricePeriod);
