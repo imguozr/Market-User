@@ -3,9 +3,9 @@ const dbConfig = require('../../config/database.config');
 
 console.log('Init sequelize...');
 
-var sequelize = new Sequelize(dbConfig.DATABASE, dbConfig.USERNAME, dbConfig.PASSWORD, {
-    host: dbConfig.HOST,
-    dialect: 'mysql',
+var sequelize = new Sequelize(process.env.HEROKU_POSTGRESQL_WHITE_URL, {
+    // host: dbConfig.HOST,
+    dialect: 'postgres',
     pool: {
         max: 5,
         min: 0,
