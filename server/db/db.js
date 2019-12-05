@@ -41,17 +41,17 @@ var exp = {
     defineModel: defineModel,
     sync: () => {
         // only allow create ddl in non-production environment:
-        if (process.env.NODE_ENV !== 'production') {
-            sequelize.sync({ force: true }).then(() => {
-                console.log('sync done,db inited');
-                process.exit(0);
-            }).catch((e) => {
-                console.log(`failed:${e}`);
-                process.exit(0);
-            });
-        } else {
-            throw new Error('Cannot sync() when NODE_ENV is set to \'production\'.');
-        }
+        // if (process.env.NODE_ENV !== 'production') {
+        sequelize.sync({ force: true }).then(() => {
+            console.log('sync done,db inited');
+            process.exit(0);
+        }).catch((e) => {
+            console.log(`failed:${e}`);
+            process.exit(0);
+        });
+        // } else {
+        //     throw new Error('Cannot sync() when NODE_ENV is set to \'production\'.');
+        // }
     }
 };
 
