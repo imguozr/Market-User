@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 
 console.log('Init sequelize...');
 
-var sequelize = new Sequelize(process.env.CLEARDB_PURPLE_URL, {
+var sequelize = new Sequelize(dbConfig.DATABASE, dbConfig.USERNAME, dbConfig.PASSWORD, {
     // host: dbConfig.HOST,
     dialect: 'mysql',
     pool: {
