@@ -64,20 +64,20 @@ const GetAllStockNames = async (ctx) => {
         success: false,
         stocks: []
     };
-    await Stock.findAll({
-        attributes: ['symbol', 'name']
-    }).then(stocks => {
+    await Stock.findAll().then(stocks => {
+        // console.log(stocks);
         if (stocks.length === 0) {
             ctx.body = result;
             return false;
         } else {
-            result.stocks = arr[0];
-            for (let stock in stocks) {
+            stocks.forEach(stock => {
+                result.success = true;
                 result.stocks.push({
-                    symbol: stock.symbol,
-                    name: stock.name
+                    symbol: stock.dataValues.symbol,
+                    name: stock.dataValues.name
                 });
-            }
+            })
+            console.log(result.stocks);
         }
     }).catch(err => {
         ctx.body = err;

@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize');
-// const dbConfig = require('../../config/database.config');
+const dbConfig = require('../../config/database.config');
 
 console.log('Init sequelize...');
 
-var sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL, {
-    // host: dbConfig.HOST,
-    dialect: 'mysql',
+var sequelize = new Sequelize(dbConfig.DATABASE, dbConfig.USERNAME, dbConfig.PASSWORD, {
+    host: dbConfig.HOST,
+    dialect: dbConfig.DIALECT,
     pool: {
         max: 5,
         min: 0,
