@@ -7,7 +7,7 @@ const Batch = require('../models/Batch');
 const UserBatch = require('../models/UserBatch');
 const UserStock = require('../models/UserStock');
 
-const url = '';
+const url = 'https://silvermont-stock-service.herokuapp.com';
 
 // const GetStockName = async (ctx) => {
 //     let result = {
@@ -349,7 +349,7 @@ const GetUserStocks = async (ctx) => {
 };
 
 module.exports = (router) => {
-    router.get('/name/:symbol', GetStockName);
+    // router.get('/name/:symbol', GetStockName);
     router.get('/name/all', GetAllStockNames);
     router.get('/user/all', GetUserStocks);
     router.get('/v1/current', GetStockPrice);

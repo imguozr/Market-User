@@ -34,6 +34,5 @@ app.use(router.routes()).use(router.allowedMethods());
 
 module.exports = app;
 
-app.listen(3300, () => {
-    console.log('App started at http://localhost:3300');
-});
+const PORT = process.env.PORT || 80;
+app.listen(PORT);
