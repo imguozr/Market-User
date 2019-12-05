@@ -1,5 +1,6 @@
 const bull = require('bull');
-const request = require('request');
+// const request = require('request');
+const axios = require('axios');
 const redisConfig = require('../../config/redis.config');
 
 const User = require('../models/User');
@@ -361,7 +362,7 @@ const CancelSchedule = async (ctx) => {
 };
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 buyQueue.process(async (job) => {
@@ -390,19 +391,22 @@ sellQueue.process(async (job) => {
     return result;
 });
 
-function getStockPrice(symbol) {
-    //TODO: Add url
-    let url = '';
-    request({
-        url: url,
-        method: 'GET',
-        json: true,
-        body: JSON.stringify({ symbol: symbol })
-    }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            return body.price;
+async function getStockPrice(symbol) {
+    let result = null;
+    let url = 'https://silvermont-stock-service.herokuapp.com';
+    let path = '/stock/v1/current';
+    console.log(url + path, post);
+    await axios.get(url + path, {
+        params: {
+            symbol: symbol
         }
+    }).then(function (response) {
+        result = response.data;
+        return result;
+    }).catch(function (error) {
+        return error;
     });
+    return result;
 };
 
 async function buyStock(post) {
