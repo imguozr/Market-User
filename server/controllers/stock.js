@@ -70,8 +70,8 @@ const GetAllStockNames = async (ctx) => {
             ctx.body = result;
             return false;
         } else {
+            result.success = true;
             stocks.forEach(stock => {
-                result.success = true;
                 result.stocks.push({
                     symbol: stock.dataValues.symbol,
                     name: stock.dataValues.name
@@ -87,11 +87,12 @@ const GetAllStockNames = async (ctx) => {
 
 const PostStockPrice = async (ctx) => {
     let result = null;
-    let path = '/stock/v1/current';
+    let path = '/stock/v1/current-list';
     let post = ctx.request.body;
+    let data = JSON.parse(post.data);
     console.log(url + path, post);
     await axios.post(url + path, {
-        data: post.data
+        data: data
     }).then(function (response) {
         result = response.data;
     }).catch(function (error) {
@@ -334,13 +335,12 @@ const GetUserStocks = async (ctx) => {
                 } else {
                     result.success = true;
                     result.message = 'Fetch user\'s stocks successfully.';
-                    result.stocks = arr[0];
-                    for (let userStock in userStocks) {
+                    userStocks.forEach(userStock => {
                         result.stocks.push({
                             symbol: userStock.symbol,
                             quantity: userStock.quantity
                         });
-                    }
+                    })
                 }
             }).catch(err => {
                 ctx.body = err;
@@ -356,13 +356,13 @@ module.exports = (router) => {
     // router.get('/name/:symbol', GetStockName);
     router.get('/name/all', GetAllStockNames);
     router.get('/user/all', GetUserStocks);
-    router.get('/v1/current', PostStockPrice);
+    router.post('/v1/current-list', PostStockPrice);
     router.get('/v1/current', GetStockPrice);
-    router.get('v1/intraday', GetStockPriceIntraday);
-    router.get('v1/period', GetStockPricePeriod);
-    router.get('v1/current-week', GetStockPriceCurrWeek);
-    router.get('v1/past-week', GetStockPricePastWeek);
-    router.get('v1/month-to-date', GetStockPriceMonthToDay);
-    router.get('v1/year-to-date', GetStockPriceYearToDay);
-    router.get('v1/past-5-years', GetStockPricePast5Years);
+    router.get('/v1/intraday', GetStockPriceIntraday);
+    router.get('/v1/period', GetStockPricePeriod);
+    router.get('/v1/current-week', GetStockPriceCurrWeek);
+    router.get('/v1/past-week', GetStockPricePastWeek);
+    router.get('/v1/month-to-date', GetStockPriceMonthToDay);
+    router.get('/v1/year-to-date', GetStockPriceYearToDay);
+    router.get('/v1/past-5-years', GetStockPricePast5Years);
 };

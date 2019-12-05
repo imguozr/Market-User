@@ -445,13 +445,16 @@ const GetPayment = async (ctx) => {
                 } else {
                     result.success = true;
                     result.message = 'Fetch payments successfully.';
-                    for (let payment in payments) {
+                    result.data = {
+                        payments: new Array(0)
+                    };
+                    payments.forEach(payment => {
                         result.data.payments.push({
                             payment_nickname: payment.payment_nickname,
                             account_number: payment.account_number,
                             routing_number: payment.routing_number
                         });
-                    }
+                    });
                 }
             }).catch(err => {
                 ctx.body = err;
