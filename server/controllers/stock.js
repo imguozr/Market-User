@@ -1,4 +1,5 @@
 const request = require('request');
+const axios = require('axios');
 
 const User = require('../models/User');
 const Payment = require('../models/Payment');
@@ -85,164 +86,151 @@ const GetAllStockNames = async (ctx) => {
 };
 
 const GetStockPrice = async (ctx) => {
-    //TODO: Add url
     let result = null;
     let path = '/stock/v1/current';
     let post = ctx.request.body;
-    request({
-        url: url + path,
-        method: 'GET',
-        json: true,
-        body: JSON.stringify({ post })
-    }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            result = body;
-            ctx.body = result;
-        } else {
-            ctx.body = error;
+    console.log(url + path, post);
+    await axios.get(url + path, {
+        params: {
+            symbol: post.symbol
         }
+    }).then(function (response) {
+        result = response.data;
+    }).catch(function (error) {
+        console.log(error);
     });
     ctx.body = result;
+    console.log(ctx.body);
 };
 
 const GetStockPriceIntraday = async (ctx) => {
     let result = null;
     let path = '/stock/v1/intraday';
-    let post = ctx.request.body;
-    request({
-        url: url + path,
-        method: 'GET',
-        json: true,
-        body: JSON.stringify({ post })
-    }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            result = body;
-            ctx.body = result;
-        } else {
-            ctx.body = error;
+    console.log(url + path, post);
+    await axios.get(url + path, {
+        params: {
+            symbol: post.symbol,
+            interval: post.interval
         }
+    }).then(function (response) {
+        result = response.data;
+    }).catch(function (error) {
+        console.log(error);
     });
     ctx.body = result;
+    console.log(ctx.body);
 };
 
 const GetStockPricePeriod = async (ctx) => {
     let result = null;
     let path = '/stock/v1/period';
     let post = ctx.request.body;
-    request({
-        url: url + path,
-        method: 'GET',
-        json: true,
-        body: JSON.stringify({ post })
-    }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            result = body;
-            ctx.body = result;
-        } else {
-            ctx.body = error;
+    console.log(url + path, post);
+    await axios.get(url + path, {
+        params: {
+            symbol: post.symbol,
+            date_from: post.date_from,
+            date_to: post.date_to
         }
+    }).then(function (response) {
+        result = response.data;
+    }).catch(function (error) {
+        console.log(error);
     });
     ctx.body = result;
+    console.log(ctx.body);
 };
 
 const GetStockPriceCurrWeek = async (ctx) => {
     let result = null;
     let path = '/stock/v1/current-week';
     let post = ctx.request.body;
-    request({
-        url: url + path,
-        method: 'GET',
-        json: true,
-        body: JSON.stringify({ post })
-    }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            result = body;
-            ctx.body = result;
-        } else {
-            ctx.body = error;
+    console.log(url + path, post);
+    await axios.get(url + path, {
+        params: {
+            symbol: post.symbol,
+            interval: post.interval
         }
+    }).then(function (response) {
+        result = response.data;
+    }).catch(function (error) {
+        console.log(error);
     });
     ctx.body = result;
+    console.log(ctx.body);
 };
 
 const GetStockPricePastWeek = async (ctx) => {
     let result = null;
     let path = '/stock/v1/past-week';
     let post = ctx.request.body;
-    request({
-        url: url + path,
-        method: 'GET',
-        json: true,
-        body: JSON.stringify({ post })
-    }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            result = body;
-            ctx.body = result;
-        } else {
-            ctx.body = error;
+    console.log(url + path, post);
+    await axios.get(url + path, {
+        params: {
+            symbol: post.symbol,
+            interval: post.interval
         }
+    }).then(function (response) {
+        result = response.data;
+    }).catch(function (error) {
+        console.log(error);
     });
     ctx.body = result;
+    console.log(ctx.body);
 };
 
 const GetStockPriceMonthToDay = async (ctx) => {
     let result = null;
     let path = '/stock/v1/month-to-date';
     let post = ctx.request.body;
-    request({
-        url: url + path,
-        method: 'GET',
-        json: true,
-        body: JSON.stringify({ post })
-    }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            result = body;
-            ctx.body = result;
-        } else {
-            ctx.body = error;
+    console.log(url + path, post);
+    await axios.get(url + path, {
+        params: {
+            symbol: post.symbol
         }
+    }).then(function (response) {
+        result = response.data;
+    }).catch(function (error) {
+        console.log(error);
     });
     ctx.body = result;
+    console.log(ctx.body);
 };
 
 const GetStockPriceYearToDay = async (ctx) => {
     let result = null;
     let path = '/stock/v1/year-to-date';
     let post = ctx.request.body;
-    request({
-        url: url + path,
-        method: 'GET',
-        json: true,
-        body: JSON.stringify({ post })
-    }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            result = body;
-            ctx.body = result;
-        } else {
-            ctx.body = error;
+    console.log(url + path, post);
+    await axios.get(url + path, {
+        params: {
+            symbol: post.symbol
         }
+    }).then(function (response) {
+        result = response.data;
+    }).catch(function (error) {
+        console.log(error);
     });
     ctx.body = result;
+    console.log(ctx.body);
 };
 
 const GetStockPricePast5Years = async (ctx) => {
     let result = null;
     let path = '/stock/v1/past-5-years';
     let post = ctx.request.body;
-    request({
-        url: url + path,
-        method: 'GET',
-        json: true,
-        body: JSON.stringify({ post })
-    }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            result = body;
-            ctx.body = result;
-        } else {
-            ctx.body = error;
+    console.log(url + path, post);
+    await axios.get(url + path, {
+        params: {
+            symbol: post.symbol
         }
+    }).then(function (response) {
+        result = response.data;
+    }).catch(function (error) {
+        console.log(error);
     });
     ctx.body = result;
+    console.log(ctx.body);
 };
 
 // async function getUserBatch(username) {
