@@ -671,6 +671,7 @@ const BalanceToPayment = async (ctx) => {
         data: null
     };
     let post = ctx.request.body;
+    let fund = Number(post.fund);
     await User.findOne({
         where: {
             username: post.username
@@ -684,7 +685,7 @@ const BalanceToPayment = async (ctx) => {
             result.message = 'Please Login.';
             ctx.body = result;
             return false;
-        } else if (user.balance < post.balance) {
+        } else if (user.balance < fund) {
             result.message = 'Insufficient balance.';
             ctx.body = result;
             return false;
@@ -700,7 +701,7 @@ const BalanceToPayment = async (ctx) => {
                     ctx.body = result;
                     return false;
                 } else {
-                    user.balance -= post.fund;
+                    user.balance -= fund;
                     await user.save();
                     result.success = true;
                     result.message = 'Cashed out successfully.';
@@ -758,6 +759,7 @@ const PaymentToBalance = async (ctx) => {
         data: null
     };
     let post = ctx.request.body;
+    let fund = Number(post.fund);
     await User.findOne({
         where: {
             username: post.username
@@ -783,7 +785,7 @@ const PaymentToBalance = async (ctx) => {
                     ctx.body = result;
                     return false;
                 } else {
-                    user.balance += post.fund;
+                    user.balance += fund;
                     await user.save();
                     result.success = true;
                     result.message = 'Deposit successfully.';

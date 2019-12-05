@@ -90,6 +90,22 @@ const GetStockPrice = async (ctx) => {
     let path = '/stock/v1/current';
     let post = ctx.request.body;
     console.log(url + path, post);
+    await axios.post(url + path, {
+        data: post.data
+    }).then(function (response) {
+        result = response.data;
+    }).catch(function (error) {
+        console.log(error);
+    });
+    ctx.body = result;
+    console.log(ctx.body);
+};
+
+const GetStockPrice = async (ctx) => {
+    let result = null;
+    let path = '/stock/v1/current';
+    let post = ctx.request.body;
+    console.log(url + path, post);
     await axios.get(url + path, {
         params: {
             symbol: post.symbol
