@@ -8,8 +8,8 @@ const Batch = require('../models/Batch');
 const UserBatch = require('../models/UserBatch');
 const UserStock = require('../models/UserStock');
 
-const buyQueue = new bull('buy queue', { redis: { host: redisConfig.HOST, port: redisConfig.PORT } });
-const sellQueue = new bull('sell queue', { redis: { host: redisConfig.HOST, port: redisConfig.PORT } });
+const buyQueue = new bull('buy queue', process.env.REDIS_URL);
+const sellQueue = new bull('sell queue', process.env.REDIS_URL);
 
 /**
  * @api {post} /stock/buy/one Buy stock at one time.
