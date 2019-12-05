@@ -5,7 +5,7 @@ console.log('Init sequelize...');
 
 var sequelize = new Sequelize(process.env.HEROKU_POSTGRESQL_WHITE_URL, {
     // host: dbConfig.HOST,
-    dialect: 'mysql',
+    dialect: 'postgres',
     pool: {
         max: 5,
         min: 0,
