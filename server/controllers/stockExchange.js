@@ -159,7 +159,8 @@ const BuyRecur = async (ctx) => {
         message: '',
         data: null
     };
-    let recur = ctx.request.body.recur;
+    let every = ctx.request.body.every;
+    let limit = ctx.request.body.limit;
     await buyQueue.add({
         username: ctx.request.body.username,
         symbol: ctx.request.body.symbol,
@@ -167,8 +168,8 @@ const BuyRecur = async (ctx) => {
         add_time: Date.now()
     }, {
         repeat: {
-            every: recur.every,
-            limit: recur.limit
+            every: every,
+            limit: limit
         }
     }).then(job => {
         result.data = {
@@ -223,7 +224,8 @@ const SellRecur = async (ctx) => {
         message: '',
         data: null
     };
-    let recur = ctx.request.body.recur;
+    let every = ctx.request.body.every;
+    let limit = ctx.request.body.limit;
     await sellQueue.add({
         username: ctx.request.body.username,
         symbol: ctx.request.body.symbol,
@@ -231,8 +233,8 @@ const SellRecur = async (ctx) => {
         add_time: Date.now()
     }, {
         repeat: {
-            every: recur.every,
-            limit: recur.limit
+            every: every,
+            limit: limit
         }
     }).then(job => {
         result.data = {
@@ -285,7 +287,9 @@ const UpdateSchedule = async (ctx) => {
         success: false,
         message: ''
     };
-    let newRecur = ctx.request.body.recur;
+    // let newRecur = ctx.request.body.recur;
+    let newEvery = ctx.request.body.every;
+    let newLimit = ctx.request.body.limit;
     let jobID = ctx.request.body.jobID;
     let behavior = ctx.request.body.behavior;
     let job = null;
@@ -305,8 +309,8 @@ const UpdateSchedule = async (ctx) => {
         add_time: Date.now()
     }, {
         repeat: {
-            every: newRecur.every,
-            limit: newRecur.limit
+            every: newEvery,
+            limit: newLimit
         }
     });
     result.success = true;
@@ -373,7 +377,7 @@ buyQueue.process(async (job) => {
         quantity: job.data.quantity,
         add_time: job.data.add_time
     }
-    result = buyStock(post)
+    result = await buyStock(post)
     console.log(result);
     return result;
 });
@@ -386,7 +390,7 @@ sellQueue.process(async (job) => {
         quantity: job.data.quantity,
         add_time: job.data.add_time
     }
-    retsult = sellStock(post);
+    retsult = await sellStock(post);
     console.log(result);
     return result;
 });
@@ -441,7 +445,7 @@ async function buyStock(post) {
             await user.save();
             await Batch.create({
                 bought_time: post.add_time,
-                quantity: post.quantity,
+                quantity: quantity,
                 symbol: post.symbol
             }).then(async (batch) => {
                 let batch_id = batch.dataValues.batch_id;
