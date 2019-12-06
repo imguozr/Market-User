@@ -341,7 +341,7 @@ const GetUserStocks = async (ctx) => {
                     result.success = true;
                     result.message = 'Fetch user\'s stocks successfully.';
                     userStocks.forEach(userStock => {
-                        console.log(userStock);
+                        // console.log(userStock);
                         result.stocks.push({
                             symbol: userStock.dataValues.symbol,
                             quantity: userStock.dataValues.quantity

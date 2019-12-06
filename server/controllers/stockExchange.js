@@ -381,7 +381,7 @@ buyQueue.process(async (job) => {
         quantity: job.data.quantity,
         add_time: job.data.add_time
     }
-    result = buyStock(post)
+    result = await buyStock(post)
     console.log(result);
     return result;
 });
@@ -394,7 +394,7 @@ sellQueue.process(async (job) => {
         quantity: job.data.quantity,
         add_time: job.data.add_time
     }
-    retsult = sellStock(post);
+    retsult = await sellStock(post);
     console.log(result);
     return result;
 });
@@ -434,6 +434,7 @@ async function buyStock(post) {
             username: post.username
         }
     }).then(async (user) => {
+        // console.log(user);
         if (!user) {
             result.message = 'No such user.';
             console.log(result);
@@ -444,7 +445,7 @@ async function buyStock(post) {
             return result;
         } else if (user.balance < totalPrice) {
             result.message = 'Insufficient balance, please deposit.';
-            console.log(result);
+            // console.log(result);
             return result;
         } else {
             user.balance -= totalPrice;
@@ -465,7 +466,6 @@ async function buyStock(post) {
             }).catch(err => {
                 return err;
             });
-
             await UserStock.findOne({
                 where: {
                     username: post.username,
