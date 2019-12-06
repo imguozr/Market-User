@@ -82,6 +82,7 @@ const GetAllStockNames = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
+    console.log(result);
     ctx.body = result;
 };
 
@@ -351,6 +352,7 @@ const GetUserStocks = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
+    console.log(result);
     ctx.body = result;
 };
 

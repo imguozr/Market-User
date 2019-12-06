@@ -74,6 +74,7 @@ const Register = async (ctx) => {
             email: post.email
         };
     }
+    console.log(result);
     ctx.body = result;
 };
 
@@ -138,6 +139,7 @@ const Login = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
+    console.log(result);
     ctx.body = result;
 };
 
@@ -185,6 +187,7 @@ const LogOut = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
+    console.log(result);
     ctx.body = result;
 };
 
@@ -243,6 +246,7 @@ const ForgotPassword = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
+    console.log(result);
     ctx.body = result;
 };
 
@@ -310,6 +314,7 @@ const GetProfile = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
+    console.log(result);
     ctx.body = result;
 };
 
@@ -377,6 +382,7 @@ const UpdateProfile = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
+    console.log(result);
     ctx.body = result;
 };
 
@@ -465,6 +471,7 @@ const GetPayment = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
+    console.log(result);
     ctx.body = result;
 };
 
@@ -548,6 +555,7 @@ const AddPayment = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
+    console.log(result);
     ctx.body = result;
 };
 
@@ -634,6 +642,7 @@ const UpdatePayment = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
+    console.log(result);
     ctx.body = result;
 };
 
@@ -722,6 +731,7 @@ const BalanceToPayment = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
+    console.log(result);
 };
 
 /**
@@ -804,6 +814,7 @@ const PaymentToBalance = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
+    console.log(result);
     ctx.body = result;
 };
 

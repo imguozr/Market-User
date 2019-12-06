@@ -181,6 +181,7 @@ const BuyRecur = async (ctx) => {
         result.message = 'Your purchase has been placed.'
         console.log('Add buy job to queue.');
     });
+    console.log(result);
     ctx.body = result;
 };
 
@@ -246,6 +247,7 @@ const SellRecur = async (ctx) => {
         result.message = 'Your selling has been placed.'
         console.log('Add sell job to queue.');
     });
+    console.log(result);
     ctx.body = result;
 };
 
@@ -316,6 +318,7 @@ const UpdateSchedule = async (ctx) => {
     result.success = true;
     result.message = 'Update schedule successfully.';
     ctx.body = result;
+    console.log(result);
 };
 
 /**
@@ -363,6 +366,7 @@ const CancelSchedule = async (ctx) => {
     result.success = true;
     result.message = 'Cancel schedule successfully.';
     ctx.body = result;
+    console.log(result);
 };
 
 function sleep(ms) {
@@ -411,6 +415,7 @@ async function getStockPrice(symbol) {
     }).catch(function (error) {
         return error;
     });
+    console.log(result);
     return result;
 };
 
@@ -496,6 +501,7 @@ async function buyStock(post) {
     }).catch(err => {
         return err;
     });
+    console.log(result);
     return result;
 };
 
@@ -571,6 +577,7 @@ async function sellStock(post) {
     }).catch(err => {
         return err;
     });
+    console.log(result);
     return result;
 };
 

@@ -10,6 +10,7 @@ const GetGithub = async (ctx) => {
     path += '?client_id=' + OAuthConfig.GITHUB_CLIENT_ID;
     path += '&scope=' + OAuthConfig.SCOPE;
     path += '&state=' + dataStr;
+    console.log(path);
     ctx.redirect(path);
 };
 
@@ -73,6 +74,7 @@ const GetGithubAccessToken = async (ctx, next) => {
                     ctx.body = err;
                 });
                 ctx.body = result;
+                console.log(result);
             });
     }).catch(e => {
         console.log(e);
