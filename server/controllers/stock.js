@@ -105,7 +105,7 @@ const PostStockPrice = async (ctx) => {
 const GetStockPrice = async (ctx) => {
     let result = null;
     let path = '/stock/v1/current';
-    let post = ctx.request.body;
+    let post = ctx.request.query;
     console.log(url + path, post);
     await axios.get(url + path, {
         params: {
@@ -123,6 +123,7 @@ const GetStockPrice = async (ctx) => {
 const GetStockPriceIntraday = async (ctx) => {
     let result = null;
     let path = '/stock/v1/intraday';
+    let post = ctx.request.query;
     console.log(url + path, post);
     await axios.get(url + path, {
         params: {
@@ -141,7 +142,7 @@ const GetStockPriceIntraday = async (ctx) => {
 const GetStockPricePeriod = async (ctx) => {
     let result = null;
     let path = '/stock/v1/period';
-    let post = ctx.request.body;
+    let post = ctx.request.query;
     console.log(url + path, post);
     await axios.get(url + path, {
         params: {
@@ -161,7 +162,7 @@ const GetStockPricePeriod = async (ctx) => {
 const GetStockPriceCurrWeek = async (ctx) => {
     let result = null;
     let path = '/stock/v1/current-week';
-    let post = ctx.request.body;
+    let post = ctx.request.query;
     console.log(url + path, post);
     await axios.get(url + path, {
         params: {
@@ -180,7 +181,7 @@ const GetStockPriceCurrWeek = async (ctx) => {
 const GetStockPricePastWeek = async (ctx) => {
     let result = null;
     let path = '/stock/v1/past-week';
-    let post = ctx.request.body;
+    let post = ctx.request.query;
     console.log(url + path, post);
     await axios.get(url + path, {
         params: {
@@ -199,7 +200,7 @@ const GetStockPricePastWeek = async (ctx) => {
 const GetStockPriceMonthToDay = async (ctx) => {
     let result = null;
     let path = '/stock/v1/month-to-date';
-    let post = ctx.request.body;
+    let post = ctx.request.query;
     console.log(url + path, post);
     await axios.get(url + path, {
         params: {
@@ -217,7 +218,7 @@ const GetStockPriceMonthToDay = async (ctx) => {
 const GetStockPriceYearToDay = async (ctx) => {
     let result = null;
     let path = '/stock/v1/year-to-date';
-    let post = ctx.request.body;
+    let post = ctx.request.query;
     console.log(url + path, post);
     await axios.get(url + path, {
         params: {
@@ -235,7 +236,7 @@ const GetStockPriceYearToDay = async (ctx) => {
 const GetStockPricePast5Years = async (ctx) => {
     let result = null;
     let path = '/stock/v1/past-5-years';
-    let post = ctx.request.body;
+    let post = ctx.request.query;
     console.log(url + path, post);
     await axios.get(url + path, {
         params: {
@@ -303,7 +304,7 @@ const GetStockPricePast5Years = async (ctx) => {
  *   }
  */
 const GetUserStocks = async (ctx) => {
-    let username = ctx.request.body.username;
+    let username = ctx.request.query.username;
     let result = {
         success: false,
         message: '',

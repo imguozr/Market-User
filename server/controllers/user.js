@@ -283,7 +283,7 @@ const GetProfile = async (ctx) => {
         message: '',
         data: null
     };
-    let post = ctx.request.body;
+    let post = ctx.request.query;
     await User.findOne({
         where: {
             username: post.username
@@ -417,7 +417,7 @@ const GetPayment = async (ctx) => {
         message: '',
         data: null
     };
-    let post = ctx.request.body;
+    let post = ctx.request.query;
     await User.findOne({
         where: {
             username: post.username
