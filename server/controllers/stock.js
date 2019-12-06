@@ -338,8 +338,8 @@ const GetUserStocks = async (ctx) => {
                     result.message = 'Fetch user\'s stocks successfully.';
                     userStocks.forEach(userStock => {
                         result.stocks.push({
-                            symbol: userStock.symbol,
-                            quantity: userStock.quantity
+                            symbol: userStock.dataValues.symbol,
+                            quantity: userStock.dataValues.quantity
                         });
                     })
                 }
