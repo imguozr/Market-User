@@ -305,17 +305,19 @@ const GetStockPricePast5Years = async (ctx) => {
  *   }
  */
 const GetUserStocks = async (ctx) => {
-    let username = ctx.request.body.username;
+    let username = ctx.request.query.username;
     let result = {
         success: false,
         message: '',
         stocks: null
     };
+    console.log(username);
     await User.findOne({
         where: {
             username: username
         }
     }).then(async (user) => {
+        console.log(user);
         if (!user) {
             result.message = 'No such user.';
             ctx.body = result;
@@ -339,9 +341,10 @@ const GetUserStocks = async (ctx) => {
                     result.success = true;
                     result.message = 'Fetch user\'s stocks successfully.';
                     userStocks.forEach(userStock => {
+                        console.log(userStock);
                         result.stocks.push({
-                            symbol: userStock.symbol,
-                            quantity: userStock.quantity
+                            symbol: userStock.dataValues.symbol,
+                            quantity: userStock.dataValues.quantity
                         });
                     });
                 }

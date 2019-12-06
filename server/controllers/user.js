@@ -74,7 +74,6 @@ const Register = async (ctx) => {
             email: post.email
         };
     }
-    console.log(result);
     ctx.body = result;
 };
 
@@ -139,7 +138,6 @@ const Login = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
-    console.log(result);
     ctx.body = result;
 };
 
@@ -187,7 +185,6 @@ const LogOut = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
-    console.log(result);
     ctx.body = result;
 };
 
@@ -246,7 +243,6 @@ const ForgotPassword = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
-    console.log(result);
     ctx.body = result;
 };
 
@@ -314,7 +310,6 @@ const GetProfile = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
-    console.log(result);
     ctx.body = result;
 };
 
@@ -382,7 +377,6 @@ const UpdateProfile = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
-    console.log(result);
     ctx.body = result;
 };
 
@@ -455,13 +449,11 @@ const GetPayment = async (ctx) => {
                         payments: new Array(0)
                     };
                     payments.forEach(payment => {
-                        data = {
+                        result.data.payments.push({
                             payment_nickname: payment.payment_nickname,
                             account_number: payment.account_number,
                             routing_number: payment.routing_number
-                        };
-                        console.log(data);
-                        result.data.payments.push(data);
+                        });
                     });
                 }
             }).catch(err => {
@@ -471,7 +463,6 @@ const GetPayment = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
-    console.log(result);
     ctx.body = result;
 };
 
@@ -555,7 +546,6 @@ const AddPayment = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
-    console.log(result);
     ctx.body = result;
 };
 
@@ -642,7 +632,6 @@ const UpdatePayment = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
-    console.log(result);
     ctx.body = result;
 };
 
@@ -685,6 +674,7 @@ const BalanceToPayment = async (ctx) => {
         data: null
     };
     let post = ctx.request.body;
+    let fund = Number(post.fund);
     await User.findOne({
         where: {
             username: post.username
@@ -698,7 +688,7 @@ const BalanceToPayment = async (ctx) => {
             result.message = 'Please Login.';
             ctx.body = result;
             return false;
-        } else if (user.balance < post.balance) {
+        } else if (user.balance < fund) {
             result.message = 'Insufficient balance.';
             ctx.body = result;
             return false;
@@ -714,7 +704,7 @@ const BalanceToPayment = async (ctx) => {
                     ctx.body = result;
                     return false;
                 } else {
-                    user.balance -= post.fund;
+                    user.balance -= fund;
                     await user.save();
                     result.success = true;
                     result.message = 'Cashed out successfully.';
@@ -731,7 +721,6 @@ const BalanceToPayment = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
-    console.log(result);
 };
 
 /**
@@ -773,6 +762,7 @@ const PaymentToBalance = async (ctx) => {
         data: null
     };
     let post = ctx.request.body;
+    let fund = Number(post.fund);
     await User.findOne({
         where: {
             username: post.username
@@ -798,7 +788,7 @@ const PaymentToBalance = async (ctx) => {
                     ctx.body = result;
                     return false;
                 } else {
-                    user.balance += post.fund;
+                    user.balance += fund;
                     await user.save();
                     result.success = true;
                     result.message = 'Deposit successfully.';
@@ -814,7 +804,6 @@ const PaymentToBalance = async (ctx) => {
     }).catch(err => {
         ctx.body = err;
     });
-    console.log(result);
     ctx.body = result;
 };
 
