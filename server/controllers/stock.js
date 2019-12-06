@@ -329,6 +329,7 @@ const GetUserStocks = async (ctx) => {
                     username: username
                 }
             }).then(userStocks => {
+                console.log(userStocks);
                 if (userStocks.length === 0) {
                     result.message = 'This user has no stocks.';
                     ctx.body = result;

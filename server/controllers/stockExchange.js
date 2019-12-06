@@ -47,12 +47,15 @@ const Buy = async (ctx) => {
         message: '',
         data: null
     };
+    let post = ctx.request.body;
+    console.log(post);
     await buyQueue.add({
-        username: ctx.request.body.username,
-        symbol: ctx.request.body.symbol,
-        quantity: ctx.request.body.quantity,
+        username: post.username,
+        symbol: post.symbol,
+        quantity: post.quantity,
         add_time: Date.now()
     }, { lifo: true }).then(job => {
+        console.log(job);
         result.data = {
             jobID: job.id
         };
@@ -235,6 +238,7 @@ const SellRecur = async (ctx) => {
             limit: recur.limit
         }
     }).then(job => {
+        console.log(job);
         result.data = {
             jobID: job.id
         };
@@ -366,12 +370,12 @@ function sleep(ms) {
 }
 
 buyQueue.process(async (job) => {
-    await sleep(30000);
+    // await sleep(30000);
     post = {
-        username: job.username,
-        symbol: job.symbol,
-        quantity: job.quantity,
-        add_time: job.add_time
+        username: job.data.username,
+        symbol: job.data.symbol,
+        quantity: job.data.quantity,
+        add_time: job.data.add_time
     }
     result = buyStock(post)
     console.log(result);
@@ -379,12 +383,12 @@ buyQueue.process(async (job) => {
 });
 
 sellQueue.process(async (job) => {
-    await sleep(30000);
+    // await sleep(30000);
     post = {
-        username: job.username,
-        symbol: job.symbol,
-        quantity: job.quantity,
-        add_time: job.add_time
+        username: job.data.username,
+        symbol: job.data.symbol,
+        quantity: job.data.quantity,
+        add_time: job.data.add_time
     }
     retsult = sellStock(post);
     console.log(result);
@@ -401,7 +405,8 @@ async function getStockPrice(symbol) {
             symbol: symbol
         }
     }).then(function (response) {
-        result = response.data;
+        result = Number(response.data.price);
+        console.log(result);
         return result;
     }).catch(function (error) {
         return error;
@@ -415,8 +420,10 @@ async function buyStock(post) {
         message: '',
         data: null
     };
-    let price = getStockPrice(post.symbol);
-    let totalPrice = price * post.quantity;
+    let price = await getStockPrice(post.symbol);
+    let quantity = Number(post.quantity)
+    let totalPrice = price * quantity;
+    console.log(price, quantity, totalPrice);
     await User.findOne({
         where: {
             username: post.username
@@ -437,61 +444,54 @@ async function buyStock(post) {
         } else {
             user.balance -= totalPrice;
             await user.save();
-            let flag1 = false;
             await Batch.create({
                 bought_time: post.add_time,
-                quantity: post.quantity,
+                quantity: quantity,
                 symbol: post.symbol
             }).then(async (batch) => {
+                console.log(batch);
                 let batch_id = batch.dataValues.batch_id;
-                let userBatchResult = await UserBatch.create({
+                await UserBatch.create({
                     username: post.username,
                     batch_id: batch_id,
                 }).catch(err => {
                     return err;
                 });
-                if (userBatchResult) {
-                    flag1 = true;
+            }).catch(err => {
+                return err;
+            });
+
+            await UserStock.findOne({
+                where: {
+                    username: post.username,
+                    symbol: post.symbol
+                }
+            }).then(async (userStock) => {
+                if (!userStock) {
+                    await UserStock.create({
+                        username: post.username,
+                        symbol: post.symbol,
+                        quantity: quantity
+                    }).then(us => {
+                        console.log(us);
+                    }).catch(err => {
+                        return err;
+                    });
+                } else {
+                    userStock.quantity += quantity;
+                    await userStock.save();
                 }
             }).catch(err => {
                 return err;
             });
-            if (flag1) {
-                let flag2 = false;
-                await UserStock.findOne({
-                    where: {
-                        username: post.username,
-                        symbol: post.symbol
-                    }
-                }).then(async (userStock) => {
-                    if (!userStock) {
-                        await UserStock.create({
-                            username: post.username,
-                            symbol: post.symbol,
-                            quantity: post.quantity
-                        }).catch(err => {
-                            return err;
-                        });
-                        flag2 = true;
-                    } else {
-                        userStock.quantity += post.quantity;
-                        await userStock.save();
-                        flag2 = true;
-                    }
-                }).catch(err => {
-                    return err;
-                });
-                if (flag2) {
-                    result.success = true;
-                    result.message = 'Buy stocks successfully.';
-                    result.data = {
-                        username: post.username,
-                        symbol: post.symbol,
-                        quantity: post.quantity,
-                        price: price
-                    };
-                }
-            }
+            result.success = true;
+            result.message = 'Buy stocks successfully.';
+            result.data = {
+                username: post.username,
+                symbol: post.symbol,
+                quantity: quantity,
+                price: price
+            };
         }
     }).catch(err => {
         return err;
