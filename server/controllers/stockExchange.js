@@ -395,7 +395,7 @@ async function getStockPrice(symbol) {
     let result = null;
     let url = 'https://silvermont-stock-service.herokuapp.com';
     let path = '/stock/v1/current';
-    console.log(url + path, post);
+    console.log(url + path, symbol);
     await axios.get(url + path, {
         params: {
             symbol: symbol
